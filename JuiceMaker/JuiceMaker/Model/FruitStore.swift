@@ -5,10 +5,10 @@
 //
 
 class FruitStore {
-    private var stock: [Fruit: Int] = [.strawberry: 10, .banana: 10, .pineapple: 10, .kiwi: 10, .mango: 10]
+    var stock: [Fruit: Int] = [.strawberry: 10, .banana: 10, .pineapple: 10, .kiwi: 10, .mango: 10]
     
-    private func hasFruit(menu: Menu, total: Int) -> Bool {
-        let necessaryFruit = menu.count(to: total)
+    func hasFruit(menu: Menu) -> Bool {
+        let necessaryFruit = menu.count()
         
         for (fruit, need) in necessaryFruit {
             guard let number = stock[fruit] else { continue }
@@ -19,19 +19,19 @@ class FruitStore {
         return true
     }
     
-    func decreaseStock(total: Int, menu: Menu) throws {
-        let necessaryFruit = menu.count(to: total)
+    func decreaseStock(menu: Menu) {
+        let necessaryFruit = menu.count()
         
         for (fruit, need) in necessaryFruit {
-            guard hasFruit(menu: menu, total: total) else {
-                throw JuiceMakerError.lackOfStock
+            guard hasFruit(menu: menu) else {
+                return
             }
             
             guard let number = stock[fruit] else {
                 return
             }
             
-            stock[fruit] = number - (need * total)
+            stock[fruit] = number - need
         }
     }
     
