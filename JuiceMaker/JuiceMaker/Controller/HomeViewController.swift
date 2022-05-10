@@ -6,7 +6,7 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, DeliveryStock {
     private var juiceMaker = JuiceMaker()
     var transferStock = [Fruit: Int]()
     
@@ -120,6 +120,7 @@ class HomeViewController: UIViewController {
         else {
             return
         }
+        editStockVC.delegate = self
         editStockVC.fruitStock = transferStock
         self.present(editStockVC, animated: true)
     }
@@ -127,5 +128,12 @@ class HomeViewController: UIViewController {
     @IBAction private func tabEditStock(_ sender: UIBarButtonItem) {
         self.presentEditStockViewController()
     }
+    
+    func fill(fruit: Fruit, amount: Int) {
+        juiceMaker.store.fillStock(fruit: fruit, total: amount)
+    }
 }
 
+protocol DeliveryStock {
+    func fill(fruit: Fruit, amount: Int)
+}

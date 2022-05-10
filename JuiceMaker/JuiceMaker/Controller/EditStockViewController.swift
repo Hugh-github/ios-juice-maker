@@ -9,6 +9,9 @@ import UIKit
 
 class EditStockViewController: UIViewController {
     var fruitStock = [Fruit: Int]()
+    private var stepperValue: Double = 0.0
+    
+    var delegate: DeliveryStock?
     
     @IBOutlet var fruitStockLabel: [FruitStockLabel]!
     @IBOutlet var editStockStepper: [EditStockStepper]!
@@ -43,7 +46,19 @@ class EditStockViewController: UIViewController {
         }
     }
     
-    @objc func stepFruit(_ sender: UIStepper) {
-        print(sender.value)
+    @objc func stepFruit(_ sender: EditStockStepper) {
+        guard let fruit = sender.convertToFruit() else { return }
+        guard let stock = fruitStock[fruit] else { return }
+        
+        if sender.value > stepperValue {
+            delegate?.fill(fruit: fruit, amount: 1)
+            stepperValue = sender.value
+            fruitStock[fruit] = stock + 1
+        } else {
+            delegate?.fill(fruit: fruit, amount: -1)
+            stepperValue = sender.value
+            fruitStock[fruit] = stock - 1
+        }
+        updateFruitStockLabel(stock: fruitStock)
     }
 }
